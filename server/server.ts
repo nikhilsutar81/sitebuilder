@@ -9,7 +9,7 @@ import projectRouter from './routes/projectRoutes.js';
 
 const app = express();
 
-const port = 3000;
+const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 
 const corsOptions = {
     origin: process.env.TRUSTED_ORIGINS?.split(',') || [],
@@ -32,6 +32,12 @@ app.use('/api/user', userRouter);
 app.use('/api/project', projectRouter);
 
 
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
-});
+// When running on Vercel/serverless, export the app without starting a listener.
+// In local/dev environments, start the server.
+if (process.env.VERCEL !== '1') {
+    app.listen(port, () => {
+        console.log(`Server is running at http://localhost:${port}`);
+    });
+}
+
+export default app;
