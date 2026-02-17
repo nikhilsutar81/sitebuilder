@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "regions": ["iad1"],
+  "buildCommand": "npm install --prefix client && npm run build --prefix client",
+  "outputDirectory": "client/dist",
+  "env": {
+    "VITE_BASEURL": "@vite_baseurl"
+  }
+}
