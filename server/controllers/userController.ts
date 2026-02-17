@@ -28,7 +28,7 @@ export const getUserCredits = async (req: Request, res: Response) => {
 export const createUserProject = async (req: Request, res: Response) => {
     const userId = req.userId;
     try {
-        const { initial_prompt } = req.body;
+        const initial_prompt = (req.body.initial_prompt as string);
 
         if (!userId) {
             return res.status(401).json({ message: 'Unauthorized' });
@@ -273,7 +273,7 @@ export const getUserProject = async (req: Request, res: Response) => {
             return res.status(401).json({ message: 'Unauthorized' });
         }
 
-        const { projectId } = req.params;
+        const projectId = (req.params.projectId as string);
 
         const project = await prisma.websiteProject.findUnique({
             where: { id: projectId, userId },
@@ -320,7 +320,7 @@ export const togglePublish = async (req: Request, res: Response) => {
             return res.status(401).json({ message: 'Unauthorized' });
         }
 
-        const { projectId } = req.params;
+        const projectId = (req.params.projectId as string);
 
         const project = await prisma.websiteProject.findUnique({
             where: { id: projectId, userId }
@@ -358,7 +358,7 @@ export const purchaseCredits = async (req: Request, res: Response) => {
         }
 
         const userId = req.userId;
-        const { planId } = req.body as { planId: keyof typeof plans }
+        const planId = (req.body.planId as keyof typeof plans);
         const origin = (Array.isArray(req.headers.origin) ? req.headers.origin[0] : req.headers.origin) || '';
 
         const plan: Plan = plans[planId]
