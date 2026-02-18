@@ -9,8 +9,6 @@ import { stripeWebhook } from './controllers/stripeWebhook.js';
 
 const app = express();
 
-const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
-
 const corsOptions = {
     origin: process.env.TRUSTED_ORIGINS?.split(',') || [],
     credentials: true,
@@ -31,7 +29,13 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/api/user', userRouter);
 app.use('/api/project', projectRouter);
 
+// Export app for Vercel serverless
+export default app;
 
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
-});
+// For local development
+if (process.env.NODE_ENV === 'development' || !process.env.VERCEL) {
+    const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+    app.listen(port, () => {
+        console.log(`Server is running at http://localhost:${port}`);
+    });
+}
