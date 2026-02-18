@@ -43,8 +43,9 @@ app.use('/api/auth', async (req, res, next) => {
     try {
         if (!_cachedAuthHandler) {
             const mod = await import('better-auth/node');
-            const authMod = await import('./lib/auth.js');
-            _cachedAuthHandler = mod.toNodeHandler(authMod.auth);
+            const { getAuth } = await import('./lib/auth.js');
+            const auth = await getAuth();
+            _cachedAuthHandler = mod.toNodeHandler(auth);
         }
 
         // Call the handler and wait for it to finish or fail via the next callback
