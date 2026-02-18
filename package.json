@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "postinstall": "cd server && npx prisma generate --schema=prisma/schema.prisma"
+    "postinstall": "cd server && npx prisma generate --schema=prisma/schema.prisma",
+    "vercel-build": "cd server && npx prisma generate --schema=prisma/schema.prisma && npm run build --prefix server",
+    "build": "npm run build --prefix server"
   }
 }
