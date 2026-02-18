@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express"
 import { getAuth } from "../lib/auth.js"
-import { fromNodeHeaders } from "better-auth/node"
 
 export const protect = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const auth = await getAuth();
+        const { fromNodeHeaders } = await import('better-auth/node');
         const session = await auth.api.getSession({
             headers: fromNodeHeaders(req.headers)
         })
