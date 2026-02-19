@@ -25,7 +25,27 @@ process.on('uncaughtException', (err) => {
 });
 
 const corsOptions = {
-    origin: process.env.TRUSTED_ORIGINS?.split(',') || [],
+    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+        // Allow requests from same origin (no origin header means same-origin request)
+        if (!origin) {
+            return callback(null, true);
+        }
+        
+        // Allow trusted origins from env
+        const trustedOrigins = process.env.TRUSTED_ORIGINS?.split(',').map(o => o.trim()) || [];
+        
+        if (trustedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        
+        // In development, be more permissive
+        if (process.env.NODE_ENV !== 'production') {
+            return callback(null, true);
+        }
+        
+        // Block in production if not in trusted list
+        callback(new Error('CORS not allowed'));
+    },
     credentials: true,
 }
 
